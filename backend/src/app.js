@@ -33,12 +33,12 @@ const parseTrustProxySetting = (value, fallback) => {
   const raw = String(value ?? '').trim();
   if (!raw) return fallback;
 
-  const lowered = raw.toLowerCase();
-  if (['true', '1', 'yes', 'on'].includes(lowered)) return true;
-  if (['false', '0', 'no', 'off'].includes(lowered)) return false;
-
   const numeric = Number(raw);
   if (Number.isInteger(numeric) && numeric >= 0) return numeric;
+
+  const lowered = raw.toLowerCase();
+  if (['true', 'yes', 'on'].includes(lowered)) return true;
+  if (['false', '0', 'no', 'off'].includes(lowered)) return false;
 
   // Allow Express subnet list syntax, e.g. "loopback, linklocal, uniquelocal"
   return raw;
