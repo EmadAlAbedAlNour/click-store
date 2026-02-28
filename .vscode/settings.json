@@ -1,0 +1,24 @@
+{
+  "files.exclude": {
+    "**/node_modules": true,
+    "frontend/dist": true,
+    "backend/storage/uploads": true,
+    "backend/ecommerce_v2.db": true,
+    "**/*.db-journal": true,
+    "**/*.db-shm": true,
+    "**/*.db-wal": true
+  },
+  "search.exclude": {
+    "**/node_modules": true,
+    "frontend/dist": true,
+    "backend/storage/uploads": true
+  },
+  "files.watcherExclude": {
+    "**/node_modules/**": true,
+    "frontend/dist/**": true,
+    "backend/storage/uploads/**": true
+  },
+  "css.lint.unknownAtRules": "ignore",
+  "scss.lint.unknownAtRules": "ignore",
+  "less.lint.unknownAtRules": "ignore"
+}
