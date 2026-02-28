@@ -2,8 +2,15 @@ import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 
+const normalizeOriginValue = (value) => String(value || '')
+  .trim()
+  .replace(/^['"]+|['"]+$/g, '')
+  .replace(/\/+$/g, '');
+
 const buildCorsOriginChecker = (corsOrigins = [], { isProd = false } = {}) => {
-  const allowed = new Set((corsOrigins || []).filter(Boolean));
+  const allowed = new Set((corsOrigins || []).map(normalizeOriginValue).filter(Boolean));
+  const wildcardAll = allowed.has('*');
+
   return (origin, callback) => {
     // In development, allow any browser origin to support public tunnel/port-forward URLs.
     // Production remains strict and only allows configured origins.
@@ -11,10 +18,14 @@ const buildCorsOriginChecker = (corsOrigins = [], { isProd = false } = {}) => {
       return callback(null, true);
     }
 
-    if (!origin || allowed.has(origin)) {
+    const normalizedOrigin = normalizeOriginValue(origin);
+    if (!normalizedOrigin || wildcardAll || allowed.has(normalizedOrigin)) {
       return callback(null, true);
     }
 
+    console.warn(
+      `⚠️ CORS blocked origin: ${normalizedOrigin}. Allowed origins: ${Array.from(allowed).join(', ') || '(none)'}`
+    );
     return callback(new Error('Not allowed by CORS'));
   };
 };
